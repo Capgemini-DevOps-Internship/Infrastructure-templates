@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "value": "agent"
+        },
+        "adminUsername": {
+            "value": "Herbert_Moore"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminPasswordOrKey": {
+            "value": null
+        },
+        "linuxdnsLabelPrefix": {
+            "value": "agent-kwfv3hr53q7um"
+        },
+        "ubuntuOSVersion": {
+            "value": "18.04-LTS"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "linuxvmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "virtualNetworkName": {
+            "value": "build-agents-vnet"
+        },
+        "subnet1Name": {
+            "value": "agents-subnet"
+        },
+        "subnet2Name": {
+            "value": "jumpbox-subnet"
+        },
+        "networkSecurityGroup1Name": {
+            "value": "linux-nsg"
+        },
+        "networkSecurityGroup2Name": {
+            "value": "windows-nsg"
+        },
+        "windowsadminUsername": {
+            "value": "Herbert_Moore"
+        },
+        "windowsadminPassword": {
+            "value": null
+        },
+        "publicIpName": {
+            "value": "windowsPublicIP"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Static"
+        },
+        "publicIpSku": {
+            "value": "Basic"
+        },
+        "osVersion": {
+            "value": "2022-datacenter"
+        },
+        "windowsvmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "windowsvmName": {
+            "value": "jumpbox"
+        }
+    }
+}

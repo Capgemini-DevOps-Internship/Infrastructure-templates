@@ -1,0 +1,87 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "defaultValue": "[uniqueString('sql', resourceGroup().id)]",
+            "type": "String",
+            "metadata": {
+                "description": "The name of the SQL logical server."
+            }
+        },
+        "sqlDBName": {
+            "defaultValue": "SampleDB",
+            "type": "String",
+            "metadata": {
+                "description": "The name of the SQL Database."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "administratorLogin": {
+            "type": "String",
+            "metadata": {
+                "description": "The administrator username of the SQL logical server."
+            }
+        },
+        "administratorLoginPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "The administrator password of the SQL logical server."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-08-01-preview",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2021-08-01-preview",
+            "name": "z2asf5nlbgwng/firewall",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+            ],
+            "properties": {
+                "endIpAddress": "0.0.0.0",
+                "startIpAddress": "0.0.0.0"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-08-01-preview",
+            "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+            ],
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2015-05-01-preview",
+            "name": "z2asf5nlbgwng/SampleDB/Default",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('serverName'), parameters('sqlDBName'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        }
+    ]
+}

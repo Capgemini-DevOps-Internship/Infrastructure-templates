@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "defaultValue": "CapgemKeyVault",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the key vault."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the Azure location where the key vault should be created."
+            }
+        },
+        "enabledForDeployment": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Specifies whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
+            }
+        },
+        "enabledForDiskEncryption": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Specifies whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys."
+            }
+        },
+        "enabledForTemplateDeployment": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Specifies whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
+            }
+        },
+        "tenantId": {
+            "defaultValue": "[subscription().tenantId]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+            }
+        },
+        "objectId": {
+            "defaultValue": "5327f130-fa27-4ada-8949-dca63b39a281",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+            }
+        },
+        "keysPermissions": {
+            "defaultValue": [
+                "list",
+                "get"
+            ],
+            "type": "Array",
+            "metadata": {
+                "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
+            }
+        },
+        "secretsPermissions": {
+            "defaultValue": [
+                "list",
+                "get"
+            ],
+            "type": "Array",
+            "metadata": {
+                "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+            }
+        },
+        "skuName": {
+            "defaultValue": "standard",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies whether the key vault is a standard vault or a premium vault."
+            }
+        },
+        "secretName": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the secret that you want to create."
+            }
+        },
+        "secretValue": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "Specifies the value of the secret that you want to create."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2021-11-01-preview",
+            "name": "[parameters('keyVaultName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "enabledForDeployment": "[parameters('enabledForDeployment')]",
+                "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+                "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+                "tenantId": "[parameters('tenantId')]",
+                "accessPolicies": [
+                    {
+                        "objectId": "[parameters('objectId')]",
+                        "tenantId": "[parameters('tenantId')]",
+                        "permissions": {
+                            "keys": "[parameters('keysPermissions')]",
+                            "secrets": "[parameters('secretsPermissions')]"
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "[parameters('skuName')]",
+                    "family": "A"
+                },
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "bypass": "AzureServices"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-11-01-preview",
+            "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ],
+            "properties": {
+                "value": "[parameters('secretValue')]"
+            }
+        }
+    ]
+}

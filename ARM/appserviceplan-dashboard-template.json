@@ -1,0 +1,162 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServicePlanName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the existing app service plan to show in the dashboard"
+            }
+        },
+        "appServicePlanResourceGroup": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the resource group that contains the app service plan"
+            }
+        },
+        "dashboardName": {
+            "defaultValue": "appServicePlan-dashboard",
+            "type": "String",
+            "metadata": {
+                "Description": "Resource name that Azure portal uses for the dashboard"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Portal/dashboards",
+            "apiVersion": "2020-09-01-preview",
+            "name": "[parameters('dashboardName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "lenses": [
+                    {
+                        "order": 0,
+                        "parts": [
+                            {
+                                "position": {
+                                    "x": 0,
+                                    "y": 4,
+                                    "rowSpan": 3,
+                                    "colSpan": 11
+                                },
+                                "metadata": {
+                                    "inputs": [
+                                        {
+                                            "name": "queryInputs",
+                                            "value": {
+                                                "timespan": {
+                                                    "duration": "PT1H"
+                                                },
+                                                "id": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                                                "chartType": 0,
+                                                "metrics": [
+                                                    {
+                                                        "name": "CPU Percentage",
+                                                        "resourceId": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+                                }
+                            },
+                            {
+                                "position": {
+                                    "x": 0,
+                                    "y": 7,
+                                    "rowSpan": 2,
+                                    "colSpan": 3
+                                },
+                                "metadata": {
+                                    "inputs": [
+                                        {
+                                            "name": "queryInputs",
+                                            "value": {
+                                                "timespan": {
+                                                    "duration": "PT1H"
+                                                },
+                                                "id": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                                                "chartType": 0,
+                                                "metrics": [
+                                                    {
+                                                        "name": "Memory Percentage",
+                                                        "resourceId": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+                                }
+                            },
+                            {
+                                "position": {
+                                    "x": 3,
+                                    "y": 7,
+                                    "rowSpan": 2,
+                                    "colSpan": 3
+                                },
+                                "metadata": {
+                                    "inputs": [
+                                        {
+                                            "name": "queryInputs",
+                                            "value": {
+                                                "timespan": {
+                                                    "duration": "PT1H"
+                                                },
+                                                "id": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                                                "chartType": 0,
+                                                "metrics": [
+                                                    {
+                                                        "name": "Disk Queue Length",
+                                                        "resourceId": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+                                }
+                            },
+                            {
+                                "position": {
+                                    "x": 6,
+                                    "y": 7,
+                                    "rowSpan": 2,
+                                    "colSpan": 3
+                                },
+                                "metadata": {
+                                    "inputs": [
+                                        {
+                                            "name": "queryInputs",
+                                            "value": {
+                                                "timespan": {
+                                                    "duration": "PT1H"
+                                                },
+                                                "id": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                                                "chartType": 0,
+                                                "metrics": [
+                                                    {
+                                                        "name": "HTTP Queue Length",
+                                                        "resourceId": "[resourceId(parameters('appServicePlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

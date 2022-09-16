@@ -1,0 +1,290 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetwork_name": {
+            "defaultValue": "build-agents-vnet-1",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the VNet"
+            }
+        },
+        "serverFarm_name": {
+            "defaultValue": "ServerFarm1",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Web Farm"
+            }
+        },
+        "site_name": {
+            "defaultValue": "Capgem-webapp-1",
+            "type": "String",
+            "metadata": {
+                "description": "Web App name must be unique DNS name worldwide"
+            }
+        },
+        "virtualNetwork_CIDR": {
+            "defaultValue": "10.0.0.0/16",
+            "type": "String",
+            "metadata": {
+                "description": "CIDR of your VNet"
+            }
+        },
+        "subnet1_name": {
+            "defaultValue": "webapp-subnet",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Subnet"
+            }
+        },
+        "subnet1_CIDR": {
+            "defaultValue": "10.0.0.0/24",
+            "type": "String",
+            "metadata": {
+                "description": "CIDR of your subnet"
+            }
+        },
+        "subnet2_name": {
+            "defaultValue": "appgateway-subnet",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Subnet"
+            }
+        },
+        "subnet2_CIDR": {
+            "defaultValue": "10.0.1.0/24",
+            "type": "String",
+            "metadata": {
+                "description": "CIDR of your subnet"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "sku": {
+            "defaultValue": "S1",
+            "type": "String",
+            "metadata": {
+                "description": "The SKU of App Service Plan."
+            }
+        },
+        "linuxFxVersion": {
+            "defaultValue": "DOCKER|herbertmoore/static-website-01:hello_world",
+            "type": "String",
+            "metadata": {
+                "description": "The Runtime stack of current web app"
+            }
+        },
+        "privateEndpoint_name": {
+            "defaultValue": "private-endpoint",
+            "type": "String",
+            "metadata": {
+                "description": "Name of your Private Endpoint"
+            }
+        },
+        "privateLinkConnection_name": {
+            "defaultValue": "private-connection",
+            "type": "String",
+            "metadata": {
+                "description": "Link name between your Private Endpoint and your Web App"
+            }
+        },
+        "privateDNSZone_name": {
+            "defaultValue": "privatelink.azurewebsites.net",
+            "type": "String",
+            "metadata": {
+                "description": "Name must be privatelink.azurewebsites.net"
+            }
+        },
+        "webapp_dns_name": {
+            "defaultValue": ".azurewebsites.net",
+            "type": "String",
+            "metadata": {
+                "description": "Name must be privatelink.azurewebsites.net"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-04-01",
+            "name": "[parameters('virtualNetwork_name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('virtualNetwork_CIDR')]"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-04-01",
+            "name": "[concat(parameters('virtualNetwork_name'),'/', parameters('subnet1_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[parameters('subnet1_CIDR')]",
+                "privateEndpointNetworkPolicies": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-04-01",
+            "name": "[concat(parameters('virtualNetwork_name'),'/', parameters('subnet2_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork_name'), parameters('subnet1_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[parameters('subnet2_CIDR')]",
+                "privateEndpointNetworkPolicies": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2019-08-01",
+            "name": "[parameters('serverFarm_name')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('sku')]"
+            },
+            "kind": "linux",
+            "properties": {
+                "reserved": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2019-08-01",
+            "name": "[parameters('site_name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarm_name'))]"
+            ],
+            "properties": {
+                "enabled": true,
+                "siteConfig": {
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "FtpsOnly"
+                },
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('site_name'), parameters('webapp_dns_name'))]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('site_name'), '.scm', parameters('webapp_dns_name'))]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarm_name'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2019-08-01",
+            "name": "[concat(parameters('site_name'), '/web')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('site_name'))]"
+            ],
+            "properties": {
+                "ftpsState": "AllAllowed"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2019-08-01",
+            "name": "[concat(parameters('site_name'), '/', parameters('site_name'), parameters('webapp_dns_name'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('site_name'))]"
+            ],
+            "properties": {
+                "siteName": "[parameters('site_name')]",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2019-04-01",
+            "name": "[parameters('privateEndpoint_name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('site_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork_name'), parameters('subnet1_name'))]"
+            ],
+            "properties": {
+                "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork_name'), parameters('subnet1_name'))]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateLinkConnection_name')]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Web/sites', parameters('site_name'))]",
+                            "groupIds": [
+                                "sites"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "name": "[parameters('privateDNSZone_name')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('privateDNSZone_name'), '/', parameters('privateDNSZone_name'), '-link')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_name'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetwork_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(parameters('privateEndpoint_name'),'/dnsgroupname')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_name'))]",
+                "[resourceId('Microsoft.Network/privateEndpoints' , parameters('privateEndpoint_name'))]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "config1",
+                        "properties": {
+                            "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDNSZone_name'))]"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

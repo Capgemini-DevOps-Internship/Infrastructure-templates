@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "storageAccountName": {
+            "value": "storttef2ng6hzeme"
+        },
+        "storageSku": {
+            "value": "Standard_LRS"
+        },
+        "indexDocumentPath": {
+            "value": "index.html"
+        },
+        "indexDocumentContents": {
+            "value": "<h1>Example static website from ARM Template</h1>"
+        },
+        "errorDocument404Path": {
+            "value": "error.html"
+        },
+        "errorDocument404Contents": {
+            "value": "<h1>Example 404 error page from ARM Template</h1>"
+        }
+    }
+}

@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "defaultValue": "[format('webApp-{0}', uniqueString(resourceGroup().id))]",
+            "minLength": 2,
+            "type": "String",
+            "metadata": {
+                "description": "Web app name."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "sku": {
+            "defaultValue": "S1",
+            "type": "String",
+            "metadata": {
+                "description": "The SKU of App Service Plan."
+            }
+        },
+        "linuxFxVersion": {
+            "defaultValue": "DOCKER|herbertmoore/static-website-01:hello_world",
+            "type": "String",
+            "metadata": {
+                "description": "The Runtime stack of current web app"
+            }
+        }
+    },
+    "variables": {
+        "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-02-01",
+            "name": "[variables('appServicePlanPortalName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('sku')]"
+            },
+            "kind": "linux",
+            "properties": {
+                "reserved": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "httpsOnly": true,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]",
+                "siteConfig": {
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "FtpsOnly"
+                }
+            }
+        }
+    ]
+}

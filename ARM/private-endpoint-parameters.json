@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetwork_name": {
+            "value": "build-agents-vnet-1"
+        },
+        "serverFarm_name": {
+            "value": "ServerFarm1"
+        },
+        "site_name": {
+            "value": "Capgem-webapp-1"
+        },
+        "virtualNetwork_CIDR": {
+            "value": "10.0.0.0/16"
+        },
+        "subnet1_name": {
+            "value": "webapp-subnet"
+        },
+        "subnet1_CIDR": {
+            "value": "10.0.1.0/24"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "sku": {
+            "value": "S1"
+        },
+        "linuxFxVersion": {
+            "value": "DOCKER|herbertmoore/static-website-01:hello_world"
+        },
+        "privateEndpoint_name": {
+            "value": "private-endpoint"
+        },
+        "privateLinkConnection_name": {
+            "value": "private-connection"
+        },
+        "privateDNSZone_name": {
+            "value": "privatelink.azurewebsites.net"
+        },
+        "webapp_dns_name": {
+            "value": ".azurewebsites.net"
+        }
+    }
+}

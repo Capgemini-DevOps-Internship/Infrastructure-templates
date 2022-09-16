@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "acrName": {
+            "defaultValue": "capgemacr",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the azure container registry (must be globally unique)"
+            }
+        },
+        "acrAdminUserEnabled": {
+            "defaultValue": true,
+            "type": "Bool",
+            "metadata": {
+                "description": "Enable an admin user that has push/pull permission to the registry."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "acrSku": {
+            "defaultValue": "Standard",
+            "type": "String",
+            "metadata": {
+                "description": "Tier of your Azure Container Registry."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2021-09-01",
+            "name": "[parameters('acrName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "displayName": "Container Registry",
+                "container.registry": "[parameters('acrName')]"
+            },
+            "sku": {
+                "name": "[parameters('acrSku')]"
+            },
+            "properties": {
+                "adminUserEnabled": "[parameters('acrAdminUserEnabled')]"
+            }
+        }
+    ],
+    "outputs": {
+        "acrLoginServer": {
+            "type": "String",
+            "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName'))).loginServer]"
+        }
+    }
+}

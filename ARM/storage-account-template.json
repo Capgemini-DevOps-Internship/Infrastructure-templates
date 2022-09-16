@@ -1,0 +1,67 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountType": {
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Premium_LRS",
+                "Premium_ZRS",
+                "Standard_GRS",
+                "Standard_GZRS",
+                "Standard_LRS",
+                "Standard_RAGRS",
+                "Standard_RAGZRS",
+                "Standard_ZRS"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Storage Account type"
+            }
+        },
+        "storageAccountName": {
+            "defaultValue": "[format('store{0}', uniqueString(resourceGroup().id))]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the Azure Storage account."
+            }
+        },
+        "containerName": {
+            "defaultValue": "logs",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the blob container."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the location in which the Azure Storage resources should be deployed."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-06-01",
+            "name": "[parameters('storageAccountName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('storageAccountType')]"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-06-01",
+            "name": "[format('{0}/default/{1}', parameters('storageAccountName'), parameters('containerName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ]
+        }
+    ]
+}

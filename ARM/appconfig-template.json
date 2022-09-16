@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "configStoreName": {
+            "defaultValue": "[format('appconfig{0}', uniqueString(resourceGroup().id))]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the App Configuration store."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the Azure location where the app configuration store should be created."
+            }
+        },
+        "keyValue": {
+            "defaultValue": "key$label",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the key-value resource. The name is a combination of key and label with $ as delimiter."
+            }
+        },
+        "keyVaultSecretURL": {
+            "defaultValue": "https://capgemkeyvault.vault.azure.net/secrets/secret",
+            "type": "String",
+            "metadata": {
+                "description": "Format should be https://{vault-name}.{vault-DNS-suffix}/secrets/{secret-name}/{secret-version}. Secret version is optional."
+            }
+        }
+    },
+    "variables": {
+        "keyVaultRef": {
+            "uri": "[parameters('keyVaultSecretURL')]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.AppConfiguration/configurationStores",
+            "apiVersion": "2021-10-01-preview",
+            "name": "[parameters('configStoreName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "standard"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+            "apiVersion": "2021-10-01-preview",
+            "name": "[format('{0}/{1}', parameters('configStoreName'), parameters('keyValue'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('configStoreName'))]"
+            ],
+            "properties": {
+                "value": "[string(variables('keyVaultRef'))]",
+                "contentType": "application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8"
+            }
+        }
+    ]
+}

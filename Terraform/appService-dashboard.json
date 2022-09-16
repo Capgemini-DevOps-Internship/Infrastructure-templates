@@ -1,0 +1,209 @@
+{
+    "lenses": {
+      "0": {
+        "order": 0,
+        "parts": {
+          "0": {
+            "position": {
+              "x": 0,
+              "y": 4,
+              "colSpan": 11,
+              "rowSpan": 3
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "Requests",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          },
+          "1": {
+            "position": {
+              "x": 0,
+              "y": 7,
+              "colSpan": 3,
+              "rowSpan": 2
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "Response Time",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          },
+          "2": {
+            "position": {
+              "x": 3,
+              "y": 7,
+              "colSpan": 3,
+              "rowSpan": 2
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "Requests In Application Queue",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          },
+          "3": {
+            "position": {
+              "x": 6,
+              "y": 7,
+              "colSpan": 3,
+              "rowSpan": 2
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "CPU Time",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          },
+          "4": {
+            "position": {
+              "x": 0,
+              "y": 2,
+              "colSpan": 3,
+              "rowSpan": 2
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "Memory working set",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      },
+                      {
+                        "name": "Average Memory working set",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          },
+          "5": {
+            "position": {
+              "x": 3,
+              "y": 0,
+              "colSpan": 8,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "queryInputs",
+                  "value": {
+                    "timespan": {
+                      "duration": "PT1H"
+                    },
+                    "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1",
+                    "chartType": 0,
+                    "metrics": [
+                      {
+                        "name": "Http 2xx",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      },
+                      {
+                        "name": "Http 3xx",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      },
+                      {
+                        "name": "Http 4xx",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      },
+                      {
+                        "name": "Http Server Errors",
+                        "resourceId": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/sites/Capgem-webapp-1"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "model": {}
+    },
+  "name": "appService-dashboard",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "INSERT LOCATION",
+  "tags": {
+    "hidden-title": "appService-dashboard"
+  },
+  "apiVersion": "2015-08-01-preview"
+}

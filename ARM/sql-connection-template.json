@@ -1,0 +1,184 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "skuName": {
+            "defaultValue": "S1",
+            "type": "String",
+            "metadata": {
+                "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+            }
+        },
+        "sqlAdministratorLogin": {
+            "type": "String",
+            "metadata": {
+                "description": "The admin user of the SQL Server"
+            }
+        },
+        "sqlAdministratorLoginPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "The password of the admin user of the SQL Server"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "linuxFxVersion": {
+            "defaultValue": "DOCKER|herbertmoore/static-website-01:hello_world",
+            "type": "String",
+            "metadata": {
+                "description": "The Runtime stack of current web app"
+            }
+        }
+    },
+    "variables": {
+        "hostingPlanName": "AppServicePlan",
+        "websiteName": "CapgemWebApp",
+        "sqlserverName": "capgemsqlserver",
+        "databaseName": "sampledb",
+        "vnetName": "[format('{0}vnet', variables('websiteName'))]",
+        "vnetAddressPrefix": "10.0.0.0/16",
+        "subnetName": "[format('{0}sn', variables('websiteName'))]",
+        "subnetAddressPrefix": "10.0.0.0/24",
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[variables('sqlserverName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+                "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+                "version": "12.0"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('vnetName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetAddressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetAddressPrefix')]",
+                            "delegations": [
+                                {
+                                    "name": "delegation",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Web/serverFarms"
+                                    }
+                                }
+                            ],
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Sql",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[format('{0}/{1}', variables('sqlserverName'), variables('databaseName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
+            ],
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 1073741824
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[format('{0}/{1}', variables('sqlserverName'), 'AllowAllWindowsAzureIps')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
+            ],
+            "properties": {
+                "endIpAddress": "10.0.0.255",
+                "startIpAddress": "10.0.0.0"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2015-05-01-preview",
+            "name": "[format('{0}/{1}/{2}', variables('sqlserverName'), variables('databaseName'),'Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', variables('sqlserverName'), variables('databaseName'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-12-01",
+            "name": "[variables('hostingPlanName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('skuName')]"
+            },
+            "kind": "linux",
+            "properties": {
+                "reserved": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-12-01",
+            "name": "[variables('websiteName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "siteConfig": {
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "FtpsOnly"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2020-12-01",
+            "name": "[format('{0}/{1}', variables('websiteName'), 'connectionstrings')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('websiteName'))]"
+            ],
+            "properties": {
+                "DefaultConnection": {
+                    "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('databaseName'), parameters('sqlAdministratorLogin'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, parameters('sqlAdministratorLoginPassword'))]",
+                    "type": "SQLAzure"
+                }
+            }
+        }
+    ]
+}
