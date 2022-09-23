@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_capgem_logicapp_name": {
+            "defaultValue": "capgem-logicapp",
+            "type": "String"
+        },
+        "connections_azurevm_externalid": {
+            "defaultValue": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/build-agents-templates/providers/Microsoft.Web/connections/azurevm",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_capgem_logicapp_name')]",
+            "location": "westeurope",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "inputs": {
+                                "method": "GET"
+                            },
+                            "kind": "Http",
+                            "type": "Request"
+                        }
+                    },
+                    "actions": {
+                        "Deallocate_virtual_machine": {
+                            "runAfter": {
+                                "Delay": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azurevm']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/subscriptions/@{encodeURIComponent('98cc8bcf-cb96-47e7-8f2a-670bded78f14')}/resourcegroups/@{encodeURIComponent('build-agents-templates')}/providers/Microsoft.Compute/virtualMachines/@{encodeURIComponent('dummy-linux-vm')}/deallocate",
+                                "queries": {
+                                    "api-version": "2019-12-01"
+                                }
+                            }
+                        },
+                        "Delay": {
+                            "runAfter": {
+                                "Start_virtual_machine": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Wait",
+                            "inputs": {
+                                "interval": {
+                                    "count": 12,
+                                    "unit": "Hour"
+                                }
+                            }
+                        },
+                        "Start_virtual_machine": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['azurevm']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/subscriptions/@{encodeURIComponent('98cc8bcf-cb96-47e7-8f2a-670bded78f14')}/resourcegroups/@{encodeURIComponent('build-agents-templates')}/providers/Microsoft.Compute/virtualMachines/@{encodeURIComponent('dummy-linux-vm')}/start",
+                                "queries": {
+                                    "api-version": "2019-12-01"
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "azurevm": {
+                                "connectionId": "[parameters('connections_azurevm_externalid')]",
+                                "connectionName": "azurevm",
+                                "id": "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/providers/Microsoft.Web/locations/westeurope/managedApis/azurevm"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

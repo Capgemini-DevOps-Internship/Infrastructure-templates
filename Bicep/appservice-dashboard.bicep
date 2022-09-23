@@ -19,9 +19,9 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
           {
             position: {
               x: 0
-              y: 4
-              rowSpan: 3
-              colSpan: 11
+              y: 0
+              rowSpan: 4
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -42,15 +42,15 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
           {
             position: {
-              x: 0
-              y: 7
-              rowSpan: 2
-              colSpan: 3
+              x: 7
+              y: 0
+              rowSpan: 4
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -71,15 +71,15 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
           {
             position: {
-              x: 3
-              y: 7
-              rowSpan: 2
-              colSpan: 3
+              x: 0
+              y: 5
+              rowSpan: 4
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -100,15 +100,15 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
           {
             position: {
-              x: 6
-              y: 7
-              rowSpan: 2
-              colSpan: 3
+              x: 7
+              y: 5
+              rowSpan: 4
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -129,15 +129,15 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
           {
             position: {
               x: 0
-              y: 2
-              rowSpan: 2
-              colSpan: 3
+              y: 10
+              rowSpan: 4
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -162,15 +162,15 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
           {
             position: {
-              x: 3
-              y: 0
+              x: 7
+              y: 10
               rowSpan: 4
-              colSpan: 8
+              colSpan: 6
             }
             metadata: {
               inputs: [
@@ -203,7 +203,7 @@ resource dashboardName_resource 'Microsoft.Portal/dashboards@2020-09-01-preview'
                   }
                 }
               ]
-              type: 'Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart'
+              type: 'Extension/HubsExtension/PartType/MonitorChartPart'
             }
           }
         ]

@@ -6,9 +6,9 @@
           "0": {
             "position": {
               "x": 0,
-              "y": 4,
-              "colSpan": 11,
-              "rowSpan": 3
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -29,15 +29,15 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "1": {
             "position": {
-              "x": 0,
-              "y": 7,
-              "colSpan": 3,
-              "rowSpan": 2
+              "x": 7,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -58,15 +58,15 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "2": {
             "position": {
-              "x": 3,
-              "y": 7,
-              "colSpan": 3,
-              "rowSpan": 2
+              "x": 0,
+              "y": 5,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -91,15 +91,15 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "3": {
             "position": {
-              "x": 6,
-              "y": 7,
-              "colSpan": 3,
-              "rowSpan": 2
+              "x": 7,
+              "y": 5,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -120,15 +120,15 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "4": {
             "position": {
               "x": 0,
-              "y": 2,
-              "colSpan": 3,
-              "rowSpan": 2
+              "y": 10,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -153,14 +153,14 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "5": {
             "position": {
-              "x": 3,
-              "y": 0,
-              "colSpan": 8,
+              "x": 7,
+              "y": 10,
+              "colSpan": 6,
               "rowSpan": 4
             },
             "metadata": {
@@ -182,15 +182,15 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           },
           "6": {
             "position": {
               "x": 0,
-              "y": 0,
-              "colSpan": 3,
-              "rowSpan": 2
+              "y": 15,
+              "colSpan": 6,
+              "rowSpan": 4
             },
             "metadata": {
               "inputs": [
@@ -211,7 +211,7 @@
                   }
                 }
               ],
-              "type": "Extension/Microsoft_Azure_Monitoring/PartType/MetricsChartPart"
+              "type": "Extension/HubsExtension/PartType/MonitorChartPart"
             }
           }
         }
