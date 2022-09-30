@@ -1,0 +1,101 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "2.0.0.0",
+    "parameters": {
+        "accountName": {
+            "type": "String",
+            "defaultValue": "CapgemAutomationAccount",
+            "metadata": {
+                "description": "Name of the automation account"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for automation account"
+            }
+        },
+        "samplePowerShellRunbookName1": {
+            "type": "String",
+            "defaultValue": "webapp-status"
+        },
+        "samplePowerShellRunbookName2": {
+            "type": "String",
+            "defaultValue": "webapp-on"
+        },
+        "samplePowerShellRunbookName3": {
+            "type": "String",
+            "defaultValue": "webapp-off"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Automation/automationAccounts",
+            "apiVersion": "2021-06-22",
+            "name": "[parameters('accountName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "tags": {},
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "sku": {
+                    "name": "Basic"
+                },
+                "publicNetworkAccess": true
+            },
+            "resources": [
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName1')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName2')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName3')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                }
+            ]
+        }
+    ]
+}

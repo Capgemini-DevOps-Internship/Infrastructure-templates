@@ -1,0 +1,4 @@
+az network traffic-manager profile create -g globally-distributed-systems -n capgemTmProfile --routing-method Performance --unique-dns-name capgemhost --ttl 30 --protocol HTTP --port 80 --path "/"
+
+az network traffic-manager endpoint create -g globally-distributed-systems --profile-name capgemTmProfile -n Endpoint1 --type azureEndpoints --target-resource-id "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/globally-distributed-systems/providers/Microsoft.Web/sites/host-1" --endpoint-status enabled
+az network traffic-manager endpoint create -g globally-distributed-systems --profile-name capgemTmProfile -n Endpoint2 --type azureEndpoints --target-resource-id "/subscriptions/98cc8bcf-cb96-47e7-8f2a-670bded78f14/resourceGroups/globally-distributed-systems/providers/Microsoft.Web/sites/host-2" --endpoint-status enabled

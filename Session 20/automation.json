@@ -1,0 +1,245 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "2.0.0.0",
+    "parameters": {
+        "accountName": {
+            "type": "String",
+            "defaultValue": "AutomationAccount",
+            "metadata": {
+                "description": "Name of the automation account"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for automation account"
+            }
+        },
+        "samplePowerShellRunbookName1": {
+            "type": "String",
+            "defaultValue": "host-1-on"
+        },
+        "samplePowerShellRunbookName2": {
+            "type": "String",
+            "defaultValue": "host-1-off"
+        },
+        "samplePowerShellRunbookName3": {
+            "type": "String",
+            "defaultValue": "host-2-on"
+        },
+        "samplePowerShellRunbookName4": {
+            "type": "String",
+            "defaultValue": "host-2-off"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Automation/automationAccounts",
+            "apiVersion": "2021-06-22",
+            "name": "[parameters('accountName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "tags": {},
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "sku": {
+                    "name": "Basic"
+                },
+                "publicNetworkAccess": true
+            },
+            "resources": [
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName1')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName2')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName3')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2019-06-01",
+                    "name": "[parameters('samplePowerShellRunbookName4')]",
+                    "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "logActivityTrace": 0
+                    }
+                },
+                {
+                    "type": "schedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName1')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                      "expiryTime": "9999-12-31T23:59:59.9999999+00:00",
+                      "frequency": "Hour",
+                      "interval": 1,
+                      "startTime": "2022-09-28T13:00:00+02:00",
+                      "timeZone": "Europe/Warsaw"
+                    }
+                },
+                {
+                    "type": "schedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName2')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                      "expiryTime": "9999-12-31T23:59:59.9999999+00:00",
+                      "frequency": "Hour",
+                      "interval": 1,
+                      "startTime": "2022-09-28T13:30:00+02:00",
+                      "timeZone": "Europe/Warsaw"
+                    }
+                },
+                {
+                    "type": "schedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName3')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                      "expiryTime": "9999-12-31T23:59:59.9999999+00:00",
+                      "frequency": "Hour",
+                      "interval": 1,
+                      "startTime": "2022-09-28T13:15:00+02:00",
+                      "timeZone": "Europe/Warsaw"
+                    }
+                },
+                {
+                    "type": "schedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName4')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                      "expiryTime": "9999-12-31T23:59:59.9999999+00:00",
+                      "frequency": "Hour",
+                      "interval": 1,
+                      "startTime": "2022-09-28T13:45:00+02:00",
+                      "timeZone": "Europe/Warsaw"
+                    }
+                },
+                {
+                    "type": "jobSchedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName1')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                        "runbook": {
+                            "name": "[parameters('samplePowerShellRunbookName1')]"
+                        },
+                        "schedule": {
+                            "name": "[parameters('samplePowerShellRunbookName1')]"
+                        }
+                    }
+                },
+                {
+                    "type": "jobSchedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName2')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                        "runbook": {
+                            "name": "[parameters('samplePowerShellRunbookName2')]"
+                        },
+                        "schedule": {
+                            "name": "[parameters('samplePowerShellRunbookName2')]"
+                        }
+                    }
+                },
+                {
+                    "type": "jobSchedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName3')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                        "runbook": {
+                            "name": "[parameters('samplePowerShellRunbookName3')]"
+                        },
+                        "schedule": {
+                            "name": "[parameters('samplePowerShellRunbookName3')]"
+                        }
+                    }
+                },
+                {
+                    "type": "jobSchedules",
+                    "apiVersion": "2020-01-13-preview",
+                    "name": "[parameters('samplePowerShellRunbookName4')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', parameters('accountName'))]"
+                    ],
+                    "properties": {
+                        "runbook": {
+                            "name": "[parameters('samplePowerShellRunbookName4')]"
+                        },
+                        "schedule": {
+                            "name": "[parameters('samplePowerShellRunbookName4')]"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
