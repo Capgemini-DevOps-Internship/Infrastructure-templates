@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api-deployment
+  labels:
+    app: catalog-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-api
+  template:
+    metadata:
+      labels:
+        app: catalog-api
+    spec:
+      containers:
+      - name: catalog-api
+        image: session25.azurecr.io/catalog-api
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-api
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: catalog-api
